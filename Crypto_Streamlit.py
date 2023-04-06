@@ -22,7 +22,7 @@ import altair as alt
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 
-@st.cache(allow_output_mutation=True)
+# @st.cache(allow_output_mutation=True)
 def train_test_split(df, test_size=0.2):
     split_row = len(df) - int(test_size * len(df))
     train_data = df.iloc[:split_row]
@@ -87,14 +87,31 @@ def display_data(data):
          )
     st.line_chart(test['close'])
     
-def forecast_data(data,days):
-    
+def forecast_data(data,model):
     st.write("""
         # Forecasting values
 
         """
          )
-    
+    fore_data = data
+
+    for i in range(10):
+        input_value = (np.array(fore_data[-10:]).reshape(1,10,6))
+        
+        fore_data_scaled = input_value/input_value[0][0] - 1 #scaling
+        
+        fore_pred = model.predict(fore_data_scaled)
+        
+        fore_pred = (fore_pred + 1) * input_value[0][0]#reverse scaling
+        
+        first_valid_index = fore_data.apply(lambda row: row.first_valid_index(), axis=1)
+        new_index = pd.DatetimeIndex([(first_valid_index.index[-1] + pd.Timedelta(days=1))])
+        new_row_df = pd.DataFrame(data=fore_pred, index=new_index, columns=fore_data.columns)
+        fore_data = pd.concat([fore_data, new_row_df], axis=0)
+
+    st.write("Crypto close price for the next "+str(10)+" days:")
+    st.line_chart(fore_data['close'])
+    st.dataframe(fore_data['close'][-10:])
     
 def main():
     output = st.empty()
@@ -105,9 +122,9 @@ def main():
         """
          )
     
-    crypto=st.sidebar.selectbox('Select Choice of Crypto using their abbreviation',('BTC','ETH','DASH','DOGE','LTC','USDT'))
-    fiat=st.sidebar.selectbox('Select Choice of currency using their abbreviation',('INR','USD','CAD','EUR'))
-    limit = st.sidebar.number_input('Insert a timeframe between 0 and 2000', min_value=1,max_value=2000)
+    crypto=st.sidebar.selectbox('Select Choice of Crypto using their abbreviation',('BTC','ETH','DASH','DOGE','LTC','USDT'),key=4)
+    fiat=st.sidebar.selectbox('Select Choice of currency using their abbreviation',('INR','USD','CAD','EUR'),key=5)
+    limit = st.sidebar.number_input('Insert a timeframe between 0 and 2000', min_value=1,max_value=2000,key=7)
     model = load_model('/Users/adityamaniar/Desktop/CryptoForecast/Crypto/cryptomodel.h5')
     
     endpoint = 'https://min-api.cryptocompare.com/data/histoday'
@@ -118,7 +135,7 @@ def main():
     target_col = 'close'
     hist=hist[hist['close']!=0]
     hist.drop(["conversionType", "conversionSymbol"], axis = 'columns', inplace = True)
-    
+   
     train, test = train_test_split(hist)
     
     output1.write("All Data")
@@ -137,26 +154,10 @@ def main():
         output1.empty()
         display_data(hist)
     if button2:
-        days = st.sidebar.number_input('Insert number of Days to forecast Crypto Price', min_value=1,max_value=10)
-        fore_data = hist
         output.empty()
         output1.empty()
-        for i in range(10):
-            input_value = (np.array(fore_data[-10:]).reshape(1,10,6))
-            
-            fore_data_scaled = input_value/input_value[0][0] - 1 #scaling
-            
-            fore_pred = model.predict(fore_data_scaled)
-            
-            fore_pred = (fore_pred + 1) * input_value[0][0]#reverse scaling
-            
-            first_valid_index = fore_data.apply(lambda row: row.first_valid_index(), axis=1)
-            new_index = pd.DatetimeIndex([(first_valid_index.index[-1] + pd.Timedelta(days=1))])
-            new_row_df = pd.DataFrame(data=fore_pred, index=new_index, columns=fore_data.columns)
-            fore_data = pd.concat([fore_data, new_row_df], axis=0)
-        
-        st.write("Crypto close price for the next "+str(days)+" days:")
-        st.line_chart(fore_data['close'][-10:])
+
+        forecast_data(hist,model)
     
     
 
