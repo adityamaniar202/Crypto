@@ -1,5 +1,5 @@
 numpy==1.21.5
-json
+# json
 requests==2.28.1
 keras==2.10.0
 matplotlib==3.6.2
