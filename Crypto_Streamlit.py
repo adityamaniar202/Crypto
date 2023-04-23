@@ -3,17 +3,18 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import json
 import requests
 import tensorflow
-from keras.models import Sequential
-from keras.layers import Activation, Dense, Dropout, LSTM
+# from keras.models import Sequential
+# from keras.layers import Activation, Dense, Dropout, LSTM
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from sklearn.metrics import mean_absolute_error
+# import seaborn as sns
+# import sklearn
+# from sklearn.metrics import mean_absolute_error
 import streamlit as st
 
 import warnings
-from keras.models import model_from_json
+# from keras.models import model_from_json
 from keras.models import load_model
 import altair as alt
 import datetime
