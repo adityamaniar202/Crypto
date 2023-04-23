@@ -172,7 +172,7 @@ def plot(data1,data2,cntr):
     
     with cntr.container():
         st.write("""
-            Forecasting values
+            Forecasting values.....
 
             """
             )
@@ -184,6 +184,11 @@ def plot(data1,data2,cntr):
         ax.set_title('Forecast Values')       
             
         st.pyplot(fig)
+        st.write("""
+                 
+                 Next 5 days forecasted values
+                 
+                 """)
         st.dataframe(data2['close'][-5:])
     
 # def plot(data1,data2,cntr):
