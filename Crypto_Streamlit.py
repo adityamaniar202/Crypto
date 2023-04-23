@@ -184,6 +184,7 @@ def plot(data1,data2,cntr):
         ax.set_title('Forecast Values')       
             
         st.pyplot(fig)
+        st.dataframe(data2['close'][-5:])
     
 # def plot(data1,data2,cntr):
     
