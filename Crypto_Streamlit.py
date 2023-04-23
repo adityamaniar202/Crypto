@@ -190,13 +190,15 @@ def plot(data1,data2,cntr):
     merged_data = pd.concat([data1['close'],data2['close']],axis=1,keys=['close1','close2'])
     
     with cntr.container():
-        st.line_chart(merged_data[['close1','close2']],x=merged_data.index,use_container_width=False,width=750,height=500)
+        st.line_chart(merged_data[['close1','close2']],use_container_width=False,width=750,height=500)
 
 def main():
     cntr = st.empty()
-    end_time = datetime.datetime(2023,5,1,0,0,0)
+    # end_time = datetime.datetime(2023,5,1,0,0,0)
+    stop_btn = st.sidebar.button('Stop Generating')
     
-    while(datetime.datetime.now()<end_time):
+    
+    while(True):
         endpoint = 'https://min-api.cryptocompare.com/data/histoday'
         res = requests.get(endpoint + '?fsym=BTC&tsym=USD&limit=1000')
         hist = pd.DataFrame(json.loads(res.content)['Data'])
@@ -226,6 +228,9 @@ def main():
             
         plot(hist[-100:],fore_data[-6:],cntr)
         
+        if stop_btn:
+            cntr.empty()
+            break
         time.sleep(10)
         
             
