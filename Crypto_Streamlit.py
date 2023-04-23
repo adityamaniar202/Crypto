@@ -165,33 +165,33 @@ st.set_option('deprecation.showfileUploaderEncoding', False)
     
 
     # train, test, X_train, X_test, y_train, y_test = prepare_data(hist, target_col)
-# def plot(data1,data2,cntr):
-    
-#     cntr.empty()
-#     fig,ax = plt.subplots()
-    
-#     with cntr.container():
-#         st.write("""
-#             Forecasting values
-
-#             """
-#             )
-#         ax.plot(data1['close'][-100:],'g',linewidth=2,label = 'Actual')
-#         ax.plot(data2['close'][-6:],'r',linewidth=2,label = 'Predicted')
-#         ax.legend()
-#         ax.set_xlabel('Date')
-#         ax.set_ylabel('Close')
-#         ax.set_title('Forecast Values')       
-            
-#         st.pyplot(fig)
-    
 def plot(data1,data2,cntr):
     
     cntr.empty()
-    merged_data = pd.concat([data1['close'],data2['close']],axis=1,keys=['close1','close2'])
+    fig,ax = plt.subplots()
     
     with cntr.container():
-        st.line_chart(merged_data[['close1','close2']],use_container_width=False,width=750,height=500)
+        st.write("""
+            Forecasting values
+
+            """
+            )
+        ax.plot(data1['close'][-100:],'g',linewidth=2,label = 'Actual')
+        ax.plot(data2['close'][-6:],'r',linewidth=2,label = 'Predicted')
+        ax.legend()
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Close')
+        ax.set_title('Forecast Values')       
+            
+        st.pyplot(fig)
+    
+# def plot(data1,data2,cntr):
+    
+#     cntr.empty()
+#     merged_data = pd.concat([data1['close'],data2['close']],axis=1,keys=['close1','close2'])
+    
+#     with cntr.container():
+#         st.line_chart(merged_data[['close1','close2']],use_container_width=False,width=750,height=500)
 
 # def kill_streamlit_process():
 #     process = subprocess.Popen(['pgrep', '-f', 'streamlit'])
