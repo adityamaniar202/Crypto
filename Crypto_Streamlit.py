@@ -18,6 +18,7 @@ from keras.models import load_model
 import altair as alt
 import datetime
 import time
+import subprocess
 
 
 # warnings.filterwarnings("ignore")
@@ -192,6 +193,13 @@ def plot(data1,data2,cntr):
     with cntr.container():
         st.line_chart(merged_data[['close1','close2']],use_container_width=False,width=750,height=500)
 
+def kill_streamlit_process():
+    process = subprocess.Popen(['pgrep', '-f', 'streamlit'])
+    process_id = int(process.stdout.readline().decode().strip())
+
+
+    subprocess.Popen(['kill', '-9', str(process_id)])
+                
 def main():
     cntr = st.empty()
     # end_time = datetime.datetime(2023,5,1,0,0,0)
@@ -229,8 +237,8 @@ def main():
         plot(hist[-100:],fore_data[-6:],cntr)
         
         if stop_btn:
-            cntr.empty()
-            break
+            kill_streamlit_process()
+            
         time.sleep(10)
         
             
