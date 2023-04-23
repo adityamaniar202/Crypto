@@ -19,7 +19,6 @@ from keras.models import load_model
 import altair as alt
 import datetime
 import time
-import subprocess
 
 
 # warnings.filterwarnings("ignore")
@@ -217,7 +216,7 @@ def main():
         hist=hist[hist['close']!=0]
         hist.drop(["conversionType", "conversionSymbol"], axis = 'columns', inplace = True)
 
-        model = load_model('/Users/adityamaniar/Desktop/CryptoForecast/Crypto/BTC_win10_2000.h5')
+        model = load_model('BTC_win10_2000.h5')
         
         fore_data = hist
 
