@@ -189,7 +189,7 @@ def plot(data1,data2,cntr):
                  Next 5 days forecasted values
                  
                  """)
-        st.dataframe(data2['close'][-5:])
+        st.dataframe(data2['close'][-6:])
     
 # def plot(data1,data2,cntr):
     
