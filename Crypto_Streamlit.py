@@ -222,7 +222,7 @@ def main():
         hist=hist[hist['close']!=0]
         hist.drop(["conversionType", "conversionSymbol"], axis = 'columns', inplace = True)
 
-        model = load_model('BTC_win10_2000.h5')
+        model = load_model('BTC1_win10_2000.h5')
         
         fore_data = hist
 
