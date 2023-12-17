@@ -216,10 +216,8 @@ def main():
         endpoint = 'https://min-api.cryptocompare.com/data/histoday'
         res = requests.get(endpoint + '?fsym=BTC&tsym=USD&limit=1000')
         hist = pd.DataFrame(json.loads(res.content)['Data'])
-        print('printing dataframeeeeeeeeeeee')
-        print(hist)
-        hist['time'] = pd.to_datetime(hist['time'], unit='s')
-        hist.set_index('time',inplace=True)
+        hist.index = pd.to_datetime(hist.index, unit='s')
+        hist = hist.set_index('time',inplace=True)
         
         target_col = 'close'
         hist=hist[hist['close']!=0]
