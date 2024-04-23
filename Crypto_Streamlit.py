@@ -216,7 +216,9 @@ def main():
         endpoint = 'https://min-api.cryptocompare.com/data/histoday'
         res = requests.get(endpoint + '?fsym=BTC&tsym=USD&limit=1000')
         hist = pd.DataFrame(json.loads(res.content)['Data'])
-        hist.index = pd.to_datetime(hist.index, unit='s')
+        
+        hist['time'] = pd.to_datetime(hist['time'], unit='s')
+        # hist.index = pd.to_datetime(hist.index, unit='s')
         hist = hist.set_index('time')
         
         target_col = 'close'
@@ -237,7 +239,9 @@ def main():
             fore_pred = (fore_pred + 1) * input_value[0][0]#reverse scaling
             
             first_valid_index = fore_data.apply(lambda row: row.first_valid_index(), axis=1)
-            new_index = pd.DatetimeIndex([(first_valid_index.index[-1] + pd.Timedelta(days=1))])
+            last_valid_index = pd.Timestamp(first_valid_index.index[-1])
+            
+            new_index = pd.DatetimeIndex([(last_valid_index + pd.Timedelta(days=1))])
             new_row_df = pd.DataFrame(data=fore_pred, index=new_index, columns=fore_data.columns)
             fore_data = pd.concat([fore_data, new_row_df], axis=0)      
             
